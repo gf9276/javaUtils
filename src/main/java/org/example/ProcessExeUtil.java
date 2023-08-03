@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.lang.reflect.Field;
 
+/**
+ * 执行进程的工具类, by guof
+ */
 public class ProcessExeUtil {
     private static final Logger logger = LoggerFactory.getLogger(ProcessExeUtil.class);
 
@@ -24,6 +27,8 @@ public class ProcessExeUtil {
         StringBuilder outputStrBuilder = new StringBuilder();
         String errStr = null;
         Process proc = null;
+        logger.info("start runtime exe script: " + cmdStr);
+        long startTime = System.currentTimeMillis();
 
         try {
             outputStrBuilder = new StringBuilder();
@@ -51,7 +56,7 @@ public class ProcessExeUtil {
         } finally {
             if (proc != null) proc.destroyForcibly(); // 无论如何我都会清除这个进程(必要)
         }
-
+        logger.info("exec cmd continue. cost = " + (System.currentTimeMillis() - startTime) / 1000L + "s");
         return new ImmutablePair<>(errStr, outputStrBuilder.toString());
     }
 

@@ -10,15 +10,33 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 只提供申请和释放接口
+ * 获取空闲gpu, by guof
  */
 public class GpuUtil {
     private static final Logger logger = LoggerFactory.getLogger(GpuUtil.class);
     private static final LinkedHashMap<String, Boolean> gpuAvailableList = new LinkedHashMap<>(); // key: uuid & value: is available?
     private static final LinkedHashMap<String, Boolean> gpuLockList = new LinkedHashMap<>(); // key: uuid & value: is locked?
 
+    /**
+     * 阻塞等待gpu
+     *
+     * @return Integer gpuId
+     * @throws InterruptedException 中断异常
+     */
+    public static Integer applyForGpuWithWait() throws InterruptedException {
+        Integer gpuId = GpuUtil.applyForGpu();
+        // 循环等待可用gpu资源
+
+        while (gpuId == null) {
+            TimeUnit.MILLISECONDS.sleep(10000); // 10s申请一次
+            gpuId = GpuUtil.applyForGpu();
+        }
+
+        return gpuId;
+    }
 
     /**
      * 申请一块 GPU, 并返回其 id
