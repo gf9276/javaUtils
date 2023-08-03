@@ -17,6 +17,11 @@ public class GpuUtil {
     private static final LinkedHashMap<String, Boolean> gpuLockList = new LinkedHashMap<>(); // key: uuid & value: is locked?
 
 
+    /**
+     * 申请一块 GPU, 并返回其 id
+     *
+     * @return Integer gpuId
+     */
     public static Integer applyForGpu() {
         Integer gpuId = null;
         refreshGpuList();  // 先刷新一遍再说
@@ -35,6 +40,11 @@ public class GpuUtil {
         return gpuId;
     }
 
+    /**
+     * 根据输入的 gpuId, 释放 GPU 资源
+     *
+     * @param gpuId: 之前通过申请得到的 gpuId
+     */
     public static void releaseGpu(Integer gpuId) {
         refreshGpuList();
         if (gpuId == null || gpuId >= gpuLockList.size()) {
