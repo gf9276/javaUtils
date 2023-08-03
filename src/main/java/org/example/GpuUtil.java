@@ -4,6 +4,8 @@ import cn.hutool.core.util.RuntimeUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -13,6 +15,7 @@ import java.util.List;
  * 只提供申请和释放接口
  */
 public class GpuUtil {
+    private static final Logger logger = LoggerFactory.getLogger(GpuUtil.class);
     private static final LinkedHashMap<String, Boolean> gpuAvailableList = new LinkedHashMap<>(); // key: uuid & value: is available?
     private static final LinkedHashMap<String, Boolean> gpuLockList = new LinkedHashMap<>(); // key: uuid & value: is locked?
 
@@ -120,7 +123,7 @@ public class GpuUtil {
                 gpuInfoList.add(gpuInfo);
             });
         } catch (Exception exception) {
-            System.out.println(exception.toString());
+            logger.info(exception.toString());
         }
 
         return gpuInfoList;
