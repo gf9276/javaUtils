@@ -22,7 +22,7 @@ public class TestProcessUtil {
         TimeUnit.MILLISECONDS.sleep(10000);
         thread.interrupt();
         thread.join();
-        System.out.println(map.get("pair").getLeft());
-        System.out.println(map.get("pair").getRight());
+        System.out.println("err: " + map.get("pair").getLeft());
+        System.out.println("output: " + map.get("pair").getRight());
     }
 }
