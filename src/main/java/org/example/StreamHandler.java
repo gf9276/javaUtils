@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -14,7 +15,8 @@ public class StreamHandler extends Thread {
     private final Integer maxSize;
 
     /**
-     * 使用新线程在 process.waitFor 函数之前读取进程输出流,可以防止死锁问题
+     * 使用新线程在 process.waitFor 函数之前读取进程输出流, 防止死锁问题的同时响应中断
+     * 注意: 这里说的响应中断是指外面的process.waitFor响应中断后导致该线程出现IOException, bufferedReader.readLine() 不受中断影响
      *
      * @param inputStream: 输入流
      * @param strBuild:    保存字符
@@ -45,10 +47,9 @@ public class StreamHandler extends Thread {
                     }
                 }
             }
-        } catch (Exception exception) {
-            boolean interrupted = Thread.interrupted(); // interrupted() 会获取中断标志位，并清除他
+        } catch (IOException exception) {
+            // bufferedReader.readLine() 会阻塞, 但是不会响应 Thread.interrupt() ... 奇葩
             logger.info(exception.toString());
-            if (interrupted) Thread.currentThread().interrupt(); // 恢复中断状态
         } finally {
             try {
                 // 收拾残局
